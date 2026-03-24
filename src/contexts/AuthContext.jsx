@@ -48,6 +48,20 @@ export const AuthProvider = ({ children }) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         const users = JSON.parse(localStorage.getItem('internship_users') || '[]');
+        
+        // --- Access Control for Company Role ---
+        const AUTHORIZED_COMPANY_EMAILS = [
+          'manager1@company.com',
+          'manager2@company.com',
+          'manager3@company.com'
+        ];
+
+        if (userData.role === 'company' && !AUTHORIZED_COMPANY_EMAILS.includes(userData.email)) {
+          reject(new Error('Unauthorized: This email is not approved for Company access.'));
+          return;
+        }
+        // ---------------------------------------
+
         if (users.some(u => u.email === userData.email)) {
           reject(new Error('Email already exists'));
           return;
