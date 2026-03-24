@@ -1,79 +1,58 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { collection, onSnapshot, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const DBContext = createContext();
 
 export const useDB = () => useContext(DBContext);
 
-// Mock Initial Data - Starts completely empty for the demo
-const INITIAL_INTERNSHIPS = [];
-
 export const DBProvider = ({ children }) => {
   const [internships, setInternships] = useState([]);
   const [applications, setApplications] = useState([]);
   
-  // Initialize mock data
+  // Real-time Listeners to Firestore
   useEffect(() => {
-    const storedInternships = localStorage.getItem('internship_postings');
-    const storedApps = localStorage.getItem('internship_applications');
-    
-    if (!storedInternships) {
-      localStorage.setItem('internship_postings', JSON.stringify(INITIAL_INTERNSHIPS));
-      setInternships(INITIAL_INTERNSHIPS);
-    } else {
-      setInternships(JSON.parse(storedInternships));
-    }
-    
-    if (!storedApps) {
-      localStorage.setItem('internship_applications', JSON.stringify([]));
-      setApplications([]);
-    } else {
-      setApplications(JSON.parse(storedApps));
-    }
+    const unsubInternships = onSnapshot(collection(db, 'internships'), (snapshot) => {
+      setInternships(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
+
+    const unsubApps = onSnapshot(collection(db, 'applications'), (snapshot) => {
+      setApplications(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
+
+    return () => {
+      unsubInternships();
+      unsubApps();
+    };
   }, []);
 
   // Internships
-  const addInternship = (internship) => {
-    const newInternship = { ...internship, id: Date.now().toString(), createdAt: new Date().toISOString() };
-    const updated = [...internships, newInternship];
-    setInternships(updated);
-    localStorage.setItem('internship_postings', JSON.stringify(updated));
-    return newInternship;
+  const addInternship = async (internship) => {
+    await addDoc(collection(db, 'internships'), { ...internship, createdAt: new Date().toISOString() });
   };
 
-  const updateInternship = (id, updates) => {
-    const updated = internships.map(i => i.id === id ? { ...i, ...updates } : i);
-    setInternships(updated);
-    localStorage.setItem('internship_postings', JSON.stringify(updated));
+  const updateInternship = async (id, updates) => {
+    await updateDoc(doc(db, 'internships', id), updates);
   };
 
   const getInternshipsByCompany = (companyId) => internships.filter(i => i.companyId === companyId);
-  
   const getApprovedInternships = () => internships.filter(i => i.status === 'approved');
 
   // Applications
-  const applyForInternship = (application) => {
-    const newApp = { ...application, id: Date.now().toString(), status: 'pending', appliedAt: new Date().toISOString() };
-    const updated = [...applications, newApp];
-    setApplications(updated);
-    localStorage.setItem('internship_applications', JSON.stringify(updated));
-    return newApp;
+  const applyForInternship = async (application) => {
+    await addDoc(collection(db, 'applications'), { ...application, status: 'pending', appliedAt: new Date().toISOString() });
   };
 
-  const updateApplicationStatus = (id, status) => {
-    const updated = applications.map(a => a.id === id ? { ...a, status } : a);
-    setApplications(updated);
-    localStorage.setItem('internship_applications', JSON.stringify(updated));
+  const updateApplicationStatus = async (id, status) => {
+    await updateDoc(doc(db, 'applications', id), { status });
   };
 
   const getApplicationsByStudent = (studentId) => applications.filter(a => a.studentId === studentId);
   const getApplicationsByInternship = (internshipId) => applications.filter(a => a.internshipId === internshipId);
 
   // Users (Admin only)
-  const getAllUsers = () => JSON.parse(localStorage.getItem('internship_users') || '[]');
-  const deleteUser = (id) => {
-    const users = getAllUsers().filter(u => u.id !== id);
-    localStorage.setItem('internship_users', JSON.stringify(users));
-  };
+  const getAllUsers = () => []; // Simplified for prototype
+  const deleteUser = (id) => {}; // Simplified for prototype
 
   const value = {
     internships,
