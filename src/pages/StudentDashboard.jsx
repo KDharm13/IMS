@@ -15,7 +15,7 @@ const DashboardHome = () => {
         <h1 className="page-title">Welcome, {user.name}</h1>
         <p className="text-muted">Here is an overview of your internship activities.</p>
       </div>
-      <div className="grid-3 mb-6">
+      <div className="grid-4 mb-6">
         <div className="card glass">
           <h3>Total Applications</h3>
           <p style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--primary)' }}>{apps.length}</p>
@@ -30,6 +30,12 @@ const DashboardHome = () => {
           <h3>Approved</h3>
           <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#059669' }}>
             {apps.filter(a => a.status === 'approved').length}
+          </p>
+        </div>
+        <div className="card glass">
+          <h3>Rejected</h3>
+          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#dc2626' }}>
+            {apps.filter(a => a.status === 'rejected').length}
           </p>
         </div>
       </div>
