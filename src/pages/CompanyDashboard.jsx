@@ -42,7 +42,7 @@ const ManagePostings = () => {
       ...formData,
       companyId: user.id,
       companyName: user.name,
-      status: 'pending' // Admin must approve
+      status: 'approved' // Bypassing Admin for the presentation so it appears instantly
     });
     setShowForm(false);
     setFormData({ title: '', description: '', location: '', stipend: '' });
