@@ -4,12 +4,8 @@ const DBContext = createContext();
 
 export const useDB = () => useContext(DBContext);
 
-// Mock Initial Data
-const INITIAL_INTERNSHIPS = [
-  { id: '1', companyId: 'comp1', companyName: 'Tech Corp', title: 'Frontend Developer Intern', description: 'Work on React apps.', status: 'approved', location: 'Remote', stipend: '$500/mo', createdAt: new Date().toISOString() },
-  { id: '2', companyId: 'comp2', companyName: 'Data Systems Inc', title: 'Data Science Intern', description: 'Analyze data with Python.', status: 'approved', location: 'New York', stipend: '$1000/mo', createdAt: new Date().toISOString() },
-  { id: '3', companyId: 'comp1', companyName: 'Tech Corp', title: 'UI/UX Intern', description: 'Design interfaces in Figma.', status: 'pending', location: 'Remote', stipend: 'Unpaid', createdAt: new Date().toISOString() }
-];
+// Mock Initial Data - Starts completely empty for the demo
+const INITIAL_INTERNSHIPS = [];
 
 export const DBProvider = ({ children }) => {
   const [internships, setInternships] = useState([]);
