@@ -86,8 +86,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    setUser(null);
     localStorage.removeItem('internship_auth_user');
+    window.location.href = '/login'; // Force a full page reload to sync the DBContext with LocalStorage
   };
 
   const value = {

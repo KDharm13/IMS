@@ -7,6 +7,8 @@ export default function Layout() {
   const { user, logout } = useAuth();
   const location = useLocation();
 
+  if (!user) return null; // Safe guard to prevent white screen crashes during logout
+
   const getNavLinks = () => {
     if (user.role === 'student') return [
       { path: '/student/dashboard', label: 'Dashboard', icon: LayoutDashboard },
