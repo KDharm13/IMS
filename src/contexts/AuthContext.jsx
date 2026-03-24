@@ -28,18 +28,22 @@ export const AuthProvider = ({ children }) => {
         return adminUser;
       }
 
-      const q = query(collection(db, 'users'), where("email", "==", email), where("password", "==", password));
-      const querySnapshot = await getDocs(q);
-      
-      if (!querySnapshot.empty) {
-        const doc = querySnapshot.docs[0];
-        const { password: _, ...userWithoutPassword } = { id: doc.id, ...doc.data() };
-        setUser(userWithoutPassword);
-        localStorage.setItem('internship_auth_user', JSON.stringify(userWithoutPassword));
-        return userWithoutPassword;
-      } else {
+      const emailQuery = query(collection(db, 'users'), where("email", "==", email));
+      const emailSnapshot = await getDocs(emailQuery);
+
+      if (emailSnapshot.empty) {
+        throw new Error('Please register first. No account found with this email.');
+      }
+
+      const doc = emailSnapshot.docs[0];
+      if (doc.data().password !== password) {
         throw new Error('Invalid email or password');
       }
+
+      const { password: _, ...userWithoutPassword } = { id: doc.id, ...doc.data() };
+      setUser(userWithoutPassword);
+      localStorage.setItem('internship_auth_user', JSON.stringify(userWithoutPassword));
+      return userWithoutPassword;
     } catch (error) {
       throw new Error(error.message);
     }
