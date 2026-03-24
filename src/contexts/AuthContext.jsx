@@ -51,9 +51,9 @@ export const AuthProvider = ({ children }) => {
         
         // --- Access Control for Company Role ---
         const AUTHORIZED_COMPANY_EMAILS = [
-          'manager1@company.com',
-          'manager2@company.com',
-          'manager3@company.com'
+          'ridhampatel0510@email.com',
+          'katrodiyadharm@gmail.com',
+          'shahbhavya477@gmail.com'
         ];
 
         if (userData.role === 'company' && !AUTHORIZED_COMPANY_EMAILS.includes(userData.email)) {
