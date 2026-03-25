@@ -16,7 +16,8 @@ export default function Register() {
     setError('');
     try {
       await register(formData);
-      navigate('/');
+      alert('Registration successful! Please log in to receive your OTP and verify your email.');
+      navigate('/login');
     } catch (err) {
       setError(err.message);
     }

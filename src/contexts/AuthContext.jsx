@@ -75,8 +75,7 @@ export const AuthProvider = ({ children }) => {
       const docRef = await addDoc(collection(db, 'users'), newUser);
       const { password, ...userWithoutPassword } = { id: docRef.id, ...newUser };
       
-      setUser(userWithoutPassword);
-      localStorage.setItem('internship_auth_user', JSON.stringify(userWithoutPassword));
+      // Do not set user session here to enforce OTP at login
       return userWithoutPassword;
     } catch (error) {
       throw new Error(error.message);
