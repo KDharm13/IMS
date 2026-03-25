@@ -34,10 +34,9 @@ export default function Login() {
       setPendingUser(user);
 
       // --- EMAILJS CONFIGURATION ---
-      // Please replace these with your actual EmailJS strings:
-      const SERVICE_ID = 'YOUR_SERVICE_ID';
-      const TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
-      const PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
+      const SERVICE_ID = 'service_foh4x9q';
+      const TEMPLATE_ID = 'template_j43olo7';
+      const PUBLIC_KEY = 'F6xajPiLsbCrWQRL8';
 
       try {
         await emailjs.send(SERVICE_ID, TEMPLATE_ID, {
