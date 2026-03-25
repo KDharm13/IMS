@@ -13,7 +13,7 @@ export default function Login() {
   const [userOtp, setUserOtp] = useState('');
   const [pendingUser, setPendingUser] = useState(null);
   
-  const { login, finalizeLogin } = useAuth();
+  const { login, finalizeLogin, verifyUserEmail } = useAuth();
   const navigate = useNavigate();
 
   const handleCredentialsSubmit = async (e) => {
@@ -21,8 +21,10 @@ export default function Login() {
     setError('');
     try {
       const user = await login(email, password);
-      // Admin bypasses OTP for convenience
-      if (user.role === 'admin') {
+      // Admin bypasses OTP. Verified users bypass OTP.
+      // (Using strictly false so older existing accounts don't get locked out)
+      if (user.role === 'admin' || user.isVerified !== false) {
+        finalizeLogin(user);
         navigate('/');
         return;
       }
@@ -55,12 +57,19 @@ export default function Login() {
     }
   };
 
-  const handleOtpSubmit = (e) => {
+  const handleOtpSubmit = async (e) => {
     e.preventDefault();
     setError('');
     if (userOtp === generatedOtp) {
-      finalizeLogin(pendingUser);
-      navigate('/');
+      try {
+        await verifyUserEmail(pendingUser.id);
+        const verifiedUser = { ...pendingUser, isVerified: true };
+        finalizeLogin(verifiedUser);
+        navigate('/');
+      } catch (err) {
+        setError('Error verifying email. Please try again.');
+        console.error(err);
+      }
     } else {
       setError('Invalid OTP code. Please try again.');
     }

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 const AuthContext = createContext();
@@ -69,6 +69,7 @@ export const AuthProvider = ({ children }) => {
 
       const newUser = {
         ...userData,
+        isVerified: false,
         createdAt: new Date().toISOString()
       };
 
@@ -87,6 +88,10 @@ export const AuthProvider = ({ children }) => {
     window.location.href = '/login'; 
   };
 
+  const verifyUserEmail = async (userId) => {
+    await updateDoc(doc(db, 'users', userId), { isVerified: true });
+  };
+
   const finalizeLogin = (userObj) => {
     setUser(userObj);
     localStorage.setItem('internship_auth_user', JSON.stringify(userObj));
@@ -96,6 +101,7 @@ export const AuthProvider = ({ children }) => {
     user,
     loading,
     login,
+    verifyUserEmail,
     finalizeLogin,
     register,
     logout,
