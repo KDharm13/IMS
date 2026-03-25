@@ -41,6 +41,10 @@ export const DBProvider = ({ children }) => {
     await updateDoc(doc(db, 'internships', id), updates);
   };
 
+  const deleteInternship = async (id) => {
+    await deleteDoc(doc(db, 'internships', id));
+  };
+
   const getInternshipsByCompany = (companyId) => internships.filter(i => i.companyId === companyId);
   const getApprovedInternships = () => internships.filter(i => i.status === 'approved');
 
@@ -73,6 +77,7 @@ export const DBProvider = ({ children }) => {
     applications,
     addInternship,
     updateInternship,
+    deleteInternship,
     getInternshipsByCompany,
     getApprovedInternships,
     applyForInternship,

@@ -30,7 +30,7 @@ const DashboardHome = () => {
 
 const ManagePostings = () => {
   const { user } = useAuth();
-  const { getInternshipsByCompany, addInternship } = useDB();
+  const { getInternshipsByCompany, addInternship, deleteInternship } = useDB();
   const internships = getInternshipsByCompany(user.id);
   const [showForm, setShowForm] = useState(false);
 
@@ -46,6 +46,12 @@ const ManagePostings = () => {
     });
     setShowForm(false);
     setFormData({ title: '', description: '', location: '', stipend: '' });
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to remove this internship posting?")) {
+      deleteInternship(id);
+    }
   };
 
   return (
@@ -87,8 +93,19 @@ const ManagePostings = () => {
       <div className="grid-2">
         {internships.map(i => (
           <div key={i.id} className="card glass">
-            <h3>{i.title}</h3>
-            <p className="text-muted">{i.location} • {i.stipend}</p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <h3>{i.title}</h3>
+                <p className="text-muted">{i.location} • {i.stipend}</p>
+              </div>
+              <button 
+                className="btn btn-secondary" 
+                style={{ color: '#dc2626', borderColor: '#f87171', padding: '0.25rem 0.5rem' }} 
+                onClick={() => handleDelete(i.id)}
+              >
+                Remove
+              </button>
+            </div>
             <div style={{ marginTop: '1rem' }}>
               <span className={`badge badge-${i.status}`}>Status: {i.status.toUpperCase()}</span>
             </div>
