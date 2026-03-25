@@ -37,7 +37,17 @@ export default function Layout() {
       <div className="sidebar">
         <div className="sidebar-header">
           <Briefcase size={28} color="var(--primary)" />
-          <span style={{ fontSize: '1.1rem' }}>InternSYS</span>
+          <span style={{ 
+            fontSize: '1.5rem', 
+            fontWeight: 800, 
+            fontFamily: '"Outfit", "Inter", sans-serif',
+            background: 'linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            letterSpacing: '1px',
+            textTransform: 'uppercase',
+            filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.1))'
+          }}>RDB</span>
         </div>
         <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border)' }}>
           <p style={{ fontWeight: 600, color: 'var(--text-main)' }}>{user.name}</p>
