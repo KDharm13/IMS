@@ -47,7 +47,7 @@ export default function Login() {
       } catch (err) {
         console.error("EmailJS sending failed:", err);
         console.log("PRESENTATION OTP FALLBACK: " + otp);
-        alert("Because the EmailJS keys are just placeholders, the email couldn't be sent.\n\nYour fallback OTP code is: " + otp + "\n\nPlease add your actual keys in Login.jsx to send real emails.");
+        alert("EmailJS Failed to send the email.\nError: " + (err.text || err.message) + "\n\nFallback OTP for testing: " + otp);
       }
 
       setStep(2);
