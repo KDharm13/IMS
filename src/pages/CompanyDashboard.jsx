@@ -157,12 +157,12 @@ const IssueCertificates = () => {
   const [formData, setFormData] = useState({});
 
   const handleIssue = (app) => {
-    const data = formData[app.id] || { grade: 'A', remarks: 'Excellent performance' };
+    const data = formData[app.id] || { grade: 'A', remarks: 'Excellent performance', companyName: user.name };
     issueCertificate({
       studentId: app.studentId,
       studentName: app.studentName,
       companyId: user.id,
-      companyName: user.name,
+      companyName: data.companyName || user.name,
       internshipId: app.internshipId,
       internshipTitle: app.internshipTitle,
       grade: data.grade,
@@ -175,7 +175,7 @@ const IssueCertificates = () => {
     setFormData(prev => ({
       ...prev,
       [appId]: {
-        ...(prev[appId] || { grade: 'A', remarks: '' }),
+        ...(prev[appId] || { grade: 'A', remarks: '', companyName: user.name }),
         [field]: value
       }
     }));
@@ -196,6 +196,7 @@ const IssueCertificates = () => {
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <th style={{ padding: '1rem' }}>Student Name</th>
                 <th>Internship Role</th>
+                <th>Company Name</th>
                 <th>Grade</th>
                 <th>Remarks</th>
                 <th>Action</th>
@@ -206,6 +207,16 @@ const IssueCertificates = () => {
                 <tr key={a.id} style={{ borderBottom: '1px solid var(--border)' }}>
                   <td style={{ padding: '1rem' }}>{a.studentName}</td>
                   <td>{a.internshipTitle}</td>
+                  <td>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="Company" 
+                      style={{ padding: '0.25rem', marginBottom: 0, width: '120px' }}
+                      value={formData[a.id]?.companyName !== undefined ? formData[a.id].companyName : user.name}
+                      onChange={(e) => handleFormChange(a.id, 'companyName', e.target.value)}
+                    />
+                  </td>
                   <td>
                     <select 
                       className="form-input" 
