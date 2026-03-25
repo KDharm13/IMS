@@ -41,8 +41,6 @@ export const AuthProvider = ({ children }) => {
       }
 
       const { password: _, ...userWithoutPassword } = { id: doc.id, ...doc.data() };
-      setUser(userWithoutPassword);
-      localStorage.setItem('internship_auth_user', JSON.stringify(userWithoutPassword));
       return userWithoutPassword;
     } catch (error) {
       throw new Error(error.message);
@@ -90,10 +88,16 @@ export const AuthProvider = ({ children }) => {
     window.location.href = '/login'; 
   };
 
+  const finalizeLogin = (userObj) => {
+    setUser(userObj);
+    localStorage.setItem('internship_auth_user', JSON.stringify(userObj));
+  };
+
   const value = {
     user,
     loading,
     login,
+    finalizeLogin,
     register,
     logout,
     isAuthenticated: !!user
