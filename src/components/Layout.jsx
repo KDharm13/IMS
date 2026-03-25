@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { LogOut, LayoutDashboard, Briefcase, FileText, CheckSquare, Users, Settings } from 'lucide-react';
+import { LogOut, LayoutDashboard, Briefcase, FileText, CheckSquare, Users, Settings, Award } from 'lucide-react';
 
 export default function Layout() {
   const { user, logout } = useAuth();
@@ -15,6 +15,7 @@ export default function Layout() {
       { path: '/student/internships', label: 'Browse Internships', icon: Briefcase },
       { path: '/student/applications', label: 'My Applications', icon: FileText },
       { path: '/student/reports', label: 'Submit Reports', icon: CheckSquare },
+      { path: '/student/certificates', label: 'My Certificates', icon: Award },
     ];
     if (user.role === 'company') return [
       { path: '/company/dashboard', label: 'Dashboard', icon: LayoutDashboard },

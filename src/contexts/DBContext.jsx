@@ -9,6 +9,7 @@ export const useDB = () => useContext(DBContext);
 export const DBProvider = ({ children }) => {
   const [internships, setInternships] = useState([]);
   const [applications, setApplications] = useState([]);
+  const [certificates, setCertificates] = useState([]);
   
   // Real-time Listeners to Firestore
   useEffect(() => {
@@ -20,9 +21,14 @@ export const DBProvider = ({ children }) => {
       setApplications(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });
 
+    const unsubCerts = onSnapshot(collection(db, 'certificates'), (snapshot) => {
+      setCertificates(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
+
     return () => {
       unsubInternships();
       unsubApps();
+      unsubCerts();
     };
   }, []);
 
@@ -50,6 +56,14 @@ export const DBProvider = ({ children }) => {
   const getApplicationsByStudent = (studentId) => applications.filter(a => a.studentId === studentId);
   const getApplicationsByInternship = (internshipId) => applications.filter(a => a.internshipId === internshipId);
 
+  // Certificates
+  const issueCertificate = async (certificate) => {
+    await addDoc(collection(db, 'certificates'), { ...certificate, issuedAt: new Date().toISOString() });
+  };
+
+  const getCertificatesByStudent = (studentId) => certificates.filter(c => c.studentId === studentId);
+  const getCertificatesByCompany = (companyId) => certificates.filter(c => c.companyId === companyId);
+
   // Users (Admin only)
   const getAllUsers = () => []; // Simplified for prototype
   const deleteUser = (id) => {}; // Simplified for prototype
@@ -65,6 +79,10 @@ export const DBProvider = ({ children }) => {
     updateApplicationStatus,
     getApplicationsByStudent,
     getApplicationsByInternship,
+    certificates,
+    issueCertificate,
+    getCertificatesByStudent,
+    getCertificatesByCompany,
     getAllUsers,
     deleteUser
   };

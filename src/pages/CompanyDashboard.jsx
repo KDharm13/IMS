@@ -146,6 +146,43 @@ const ReviewApplicants = () => {
 };
 
 const IssueCertificates = () => {
+  const { user } = useAuth();
+  const { getInternshipsByCompany, getApplicationsByInternship, getCertificatesByCompany, issueCertificate } = useDB();
+  
+  const internships = getInternshipsByCompany(user.id);
+  const allApps = internships.flatMap(i => getApplicationsByInternship(i.id));
+  const approvedApps = allApps.filter(a => a.status === 'approved');
+  const issuedCerts = getCertificatesByCompany(user.id);
+  
+  const [formData, setFormData] = useState({});
+
+  const handleIssue = (app) => {
+    const data = formData[app.id] || { grade: 'A', remarks: 'Excellent performance' };
+    issueCertificate({
+      studentId: app.studentId,
+      studentName: app.studentName,
+      companyId: user.id,
+      companyName: user.name,
+      internshipId: app.internshipId,
+      internshipTitle: app.internshipTitle,
+      grade: data.grade,
+      remarks: data.remarks
+    });
+    alert('Certificate issued successfully!');
+  };
+
+  const handleFormChange = (appId, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [appId]: {
+        ...(prev[appId] || { grade: 'A', remarks: '' }),
+        [field]: value
+      }
+    }));
+  };
+
+  const pendingCerts = approvedApps.filter(app => !issuedCerts.some(c => c.internshipId === app.internshipId && c.studentId === app.studentId));
+
   return (
     <div>
       <div className="page-header">
@@ -153,7 +190,54 @@ const IssueCertificates = () => {
         <p className="text-muted">Evaluate intern performance and provide certificates.</p>
       </div>
       <div className="card glass">
-        <p>No active interns eligible for certification at this time.</p>
+        {pendingCerts.length === 0 ? <p>No active interns eligible for certification at this time.</p> : (
+          <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <th style={{ padding: '1rem' }}>Student Name</th>
+                <th>Internship Role</th>
+                <th>Grade</th>
+                <th>Remarks</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pendingCerts.map(a => (
+                <tr key={a.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ padding: '1rem' }}>{a.studentName}</td>
+                  <td>{a.internshipTitle}</td>
+                  <td>
+                    <select 
+                      className="form-input" 
+                      style={{ padding: '0.25rem', width: '80px', marginBottom: 0 }}
+                      value={formData[a.id]?.grade || 'A'}
+                      onChange={(e) => handleFormChange(a.id, 'grade', e.target.value)}
+                    >
+                      <option value="O">O</option>
+                      <option value="A+">A+</option>
+                      <option value="A">A</option>
+                      <option value="B">B</option>
+                      <option value="C">C</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input 
+                      type="text" 
+                      className="form-input" 
+                      placeholder="Remarks..." 
+                      style={{ padding: '0.25rem', marginBottom: 0 }}
+                      value={formData[a.id]?.remarks || ''}
+                      onChange={(e) => handleFormChange(a.id, 'remarks', e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <button className="btn btn-primary" onClick={() => handleIssue(a)}>Issue</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

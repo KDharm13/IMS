@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useDB } from '../contexts/DBContext';
 import { useAuth } from '../contexts/AuthContext';
-import { CheckCircle, Clock } from 'lucide-react';
+import { CheckCircle, Clock, Award } from 'lucide-react';
 
 const DashboardHome = () => {
   const { user } = useAuth();
@@ -155,6 +155,54 @@ const SubmitReports = () => {
   );
 };
 
+const MyCertificates = () => {
+  const { user } = useAuth();
+  const { getCertificatesByStudent } = useDB();
+  const certs = getCertificatesByStudent(user.id);
+
+  return (
+    <div>
+      <div className="page-header">
+        <h1 className="page-title">My Certificates</h1>
+        <p className="text-muted">Certificates earned from your internships.</p>
+      </div>
+      <div className="grid-2">
+        {certs.length === 0 ? <p>You haven't earned any certificates yet.</p> : (
+          certs.map(c => (
+            <div key={c.id} className="card glass" style={{ border: '2px solid var(--primary)' }}>
+              <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                <Award size={48} style={{ color: 'var(--primary)' }} />
+              </div>
+              <h2 style={{ textAlign: 'center', marginBottom: '0.5rem' }}>Certificate of Completion</h2>
+              <h3 style={{ textAlign: 'center', color: 'var(--primary)', marginBottom: '1rem' }}>{c.studentName}</h3>
+              <p style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                For successfully completing the internship requirement as<br/>
+                <strong>{c.internshipTitle}</strong><br/>
+                at <strong>{c.companyName}</strong>.
+              </p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--border)', paddingTop: '1rem', marginTop: '1rem' }}>
+                <div>
+                  <span className="text-muted" style={{ display: 'block', fontSize: '0.8rem' }}>Grade</span>
+                  <strong>{c.grade}</strong>
+                </div>
+                <div>
+                  <span className="text-muted" style={{ display: 'block', fontSize: '0.8rem' }}>Issued On</span>
+                  <strong>{new Date(c.issuedAt).toLocaleDateString()}</strong>
+                </div>
+              </div>
+              {c.remarks && (
+                <div style={{ marginTop: '1rem', fontStyle: 'italic', fontSize: '0.9rem', textAlign: 'center' }}>
+                  "{c.remarks}"
+                </div>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+};
+
 export default function StudentDashboard() {
   return (
     <Routes>
@@ -162,6 +210,7 @@ export default function StudentDashboard() {
       <Route path="internships" element={<BrowseInternships />} />
       <Route path="applications" element={<MyApplications />} />
       <Route path="reports" element={<SubmitReports />} />
+      <Route path="certificates" element={<MyCertificates />} />
     </Routes>
   );
 }
