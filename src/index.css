@@ -594,4 +594,27 @@ tr:hover td {
     overflow-x: auto;
     white-space: nowrap;
   }
+
+  /* --- Mobile Layout Fixes for New Split Login --- */
+  .login-split-layout {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    border-radius: 0;
+  }
+  
+  .login-left {
+    flex: 1;
+    width: 100%;
+    padding: 2rem 1.5rem;
+    border-radius: 0;
+    box-shadow: none;
+    min-height: 100vh;
+    justify-content: center;
+  }
+
+  /* Hide the presentation layer on small screens to save space */
+  .login-right {
+    display: none;
+  }
 }

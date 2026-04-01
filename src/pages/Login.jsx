@@ -124,7 +124,9 @@ export default function Login() {
                   <a href="#">Forgot your password?</a>
                 </div>
 
-
+                <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.9rem', color: 'var(--text-main)' }}>
+                  Don't have an account? <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 'bold', textDecoration: 'none' }}>Sign up</Link>
+                </div>
               </form>
             </>
           ) : (
