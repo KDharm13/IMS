@@ -87,6 +87,10 @@ export const DBProvider = ({ children }) => {
     await addDoc(collection(db, 'reports'), { ...report, submittedAt: new Date().toISOString() });
   };
 
+  const deleteReport = async (id) => {
+    await deleteDoc(doc(db, 'reports', id));
+  };
+
   const getReportsByCompany = (companyId) => reports;
   const getReportsByStudent = (studentId) => reports.filter(r => r.studentId === studentId);
 
@@ -114,6 +118,7 @@ export const DBProvider = ({ children }) => {
     getCertificatesByCompany,
     reports,
     submitReport,
+    deleteReport,
     getReportsByCompany,
     getReportsByStudent,
     getAllUsers,

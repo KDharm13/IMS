@@ -323,7 +323,7 @@ const IssueCertificates = () => {
 
 const ReviewReports = () => {
   const { user } = useAuth();
-  const { getReportsByCompany } = useDB();
+  const { getReportsByCompany, deleteReport } = useDB();
   const reports = getReportsByCompany(user.id);
   
   return (
@@ -341,6 +341,7 @@ const ReviewReports = () => {
                 <th>Student</th>
                 <th>Internship</th>
                 <th>Report Details</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -349,7 +350,24 @@ const ReviewReports = () => {
                   <td style={{ padding: '1rem', whiteSpace: 'nowrap' }}>{new Date(r.submittedAt).toLocaleDateString()}</td>
                   <td>{r.studentName}</td>
                   <td>{r.internshipTitle}</td>
-                  <td><strong style={{ color: 'var(--primary)' }}>{r.title}</strong><br/><span style={{ fontSize: '0.85rem' }} className="text-muted">{r.description}</span></td>
+                  <td>
+                    <strong style={{ color: 'var(--primary)' }}>{r.title}</strong><br/>
+                    <span style={{ fontSize: '0.85rem' }} className="text-muted">{r.description}</span>
+                    {r.fileUrl && (
+                      <div style={{ marginTop: '0.5rem' }}>
+                        <a href={r.fileUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'underline', fontSize: '0.85rem' }}>
+                          View/Download Attached File
+                        </a>
+                      </div>
+                    )}
+                  </td>
+                  <td>
+                    <button className="btn btn-secondary" style={{ color: 'red', padding: '0.25rem 0.5rem' }} onClick={() => {
+                      if (window.confirm("Are you sure you want to delete this report?")) {
+                        deleteReport(r.id);
+                      }
+                    }}>Delete</button>
+                  </td>
                 </tr>
               ))}
             </tbody>
