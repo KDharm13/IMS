@@ -82,7 +82,7 @@ export default function Login() {
           <div className="login-logo-icon">
             <Layout size={16} />
           </div>
-          Template Design
+          RDB Internship Portal
         </div>
 
         <div className="login-form-wrapper">
@@ -124,10 +124,7 @@ export default function Login() {
                   <a href="#">Forgot your password?</a>
                 </div>
 
-                <div style={{ marginTop: '2rem', fontSize: '0.85rem', color: 'var(--text-muted)', textAlign: 'center', lineHeight: '1.5' }}>
-                  <p><strong>Demo Defaults:</strong></p>
-                  <p>Admin: admin@system.com / admin123</p>
-                </div>
+
               </form>
             </>
           ) : (
@@ -176,10 +173,7 @@ export default function Login() {
       {/* Right Presentation Layer */}
       <div className="login-right">
         <div className="login-nav">
-          <Link className="login-nav-link" to="/">ABOUT</Link>
-          <Link className="login-nav-link" to="/">DOWNLOAD</Link>
-          <Link className="login-nav-link" to="/">PRICING</Link>
-          <Link className="login-nav-link" to="/">CONTACT</Link>
+
           <Link to="/register" style={{ textDecoration: 'none' }}>
             <button className="login-nav-btn">SIGN UP</button>
           </Link>
