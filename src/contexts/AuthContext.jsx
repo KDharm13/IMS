@@ -49,9 +49,8 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      // --- Access Control for Company Role ---
       const AUTHORIZED_COMPANY_EMAILS = [
-        'ridhampatel0510@email.com',
+        'ridhampatel0510@gmail.com',
         'katrodiyadharm@gmail.com',
         'shahbhavya477@gmail.com'
       ];
