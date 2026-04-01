@@ -82,7 +82,7 @@ const ManagePostings = () => {
               </div>
               <div className="form-group">
                 <label className="form-label">Stipend</label>
-                <input required className="form-input" placeholder="e.g. Unpaid, $500/mo" value={formData.stipend} onChange={e => setFormData({...formData, stipend: e.target.value})} />
+                <input required className="form-input" placeholder="e.g. Unpaid, ₹10,000/mo" value={formData.stipend} onChange={e => setFormData({...formData, stipend: e.target.value})} />
               </div>
             </div>
             <button type="submit" className="btn btn-primary">Submit for Approval</button>
