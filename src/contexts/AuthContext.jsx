@@ -96,6 +96,19 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('internship_auth_user', JSON.stringify(userObj));
   };
 
+  const checkUserExists = async (email) => {
+    const emailQuery = query(collection(db, 'users'), where("email", "==", email));
+    const snapshot = await getDocs(emailQuery);
+    if (snapshot.empty) throw new Error('No account found with this email.');
+    const userDoc = snapshot.docs[0];
+    const data = userDoc.data();
+    return { id: userDoc.id, name: data.name, email: data.email };
+  };
+
+  const updatePassword = async (userId, newPassword) => {
+    await updateDoc(doc(db, 'users', userId), { password: newPassword });
+  };
+
   const value = {
     user,
     loading,
@@ -104,6 +117,8 @@ export const AuthProvider = ({ children }) => {
     finalizeLogin,
     register,
     logout,
+    checkUserExists,
+    updatePassword,
     isAuthenticated: !!user
   };
 
