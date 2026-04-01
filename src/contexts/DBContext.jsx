@@ -51,7 +51,7 @@ export const DBProvider = ({ children }) => {
     await deleteDoc(doc(db, 'internships', id));
   };
 
-  const getInternshipsByCompany = (companyId) => internships.filter(i => i.companyId === companyId);
+  const getInternshipsByCompany = (companyId) => internships;
   const getApprovedInternships = () => internships.filter(i => i.status === 'approved');
 
   // Applications
@@ -72,14 +72,14 @@ export const DBProvider = ({ children }) => {
   };
 
   const getCertificatesByStudent = (studentId) => certificates.filter(c => c.studentId === studentId);
-  const getCertificatesByCompany = (companyId) => certificates.filter(c => c.companyId === companyId);
+  const getCertificatesByCompany = (companyId) => certificates;
 
   // Reports
   const submitReport = async (report) => {
     await addDoc(collection(db, 'reports'), { ...report, submittedAt: new Date().toISOString() });
   };
 
-  const getReportsByCompany = (companyId) => reports.filter(r => r.companyId === companyId);
+  const getReportsByCompany = (companyId) => reports;
   const getReportsByStudent = (studentId) => reports.filter(r => r.studentId === studentId);
 
   // Users (Admin only)
