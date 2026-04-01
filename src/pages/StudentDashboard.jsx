@@ -294,65 +294,91 @@ const MyCertificates = () => {
           certs.map(c => (
             <div key={c.id} style={{ 
               position: 'relative', 
-              backgroundColor: '#1E1B4B', 
+              backgroundColor: '#201b45', 
               color: 'white',
-              padding: '3rem 4rem 3rem 6rem',
-              borderRadius: '8px',
+              padding: '4rem 5rem 6rem 10rem',
               overflow: 'hidden',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
               display: 'flex',
               flexDirection: 'column',
-              minHeight: '400px'
+              minHeight: '520px',
+              fontFamily: '"Outfit", sans-serif'
             }}>
-              {/* Left Stripes */}
-              <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '40px', backgroundColor: '#1E40AF' }}></div>
-              <div style={{ position: 'absolute', left: '40px', top: 0, bottom: 0, width: '15px', backgroundColor: '#3B82F6', opacity: 0.9 }}></div>
+              {/* Vertical Stripes (Left) */}
+              <div style={{ position: 'absolute', left: '0', top: 0, bottom: 0, width: '30px', backgroundColor: '#201b45' }}></div>
+              <div style={{ position: 'absolute', left: '30px', top: 0, bottom: 0, width: '40px', backgroundColor: '#1C5D99', zIndex: 1 }}></div>
+              <div style={{ position: 'absolute', left: '70px', top: 0, bottom: 0, width: '30px', backgroundColor: '#2E7DCD', zIndex: 1 }}></div>
 
-              {/* Ribbon */}
-              <div style={{ position: 'absolute', top: '2.5rem', right: '3rem', textAlign: 'center' }}>
-                <Award size={72} style={{ color: '#FBBF24', filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.4))' }} fill="#FBBF24" />
+              {/* Horizontal Stripes (Bottom) */}
+              <div style={{ position: 'absolute', left: '30px', bottom: '30px', right: 0, height: '24px', backgroundColor: '#1C5D99', zIndex: 0 }}></div>
+              <div style={{ position: 'absolute', left: '30px', bottom: '26px', right: 0, height: '4px', backgroundColor: '#D9B04D', zIndex: 0 }}></div>
+
+              {/* Ribbon Badge */}
+              <div style={{ position: 'absolute', top: '3rem', right: '4rem', zIndex: 2 }}>
+                <svg width="100" height="130" viewBox="0 0 100 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Back Ribbons */}
+                  <path d="M30 60 V120 L40 105 L50 120 V60 Z" fill="#1C5D99"/>
+                  <path d="M50 60 V120 L60 105 L70 120 V60 Z" fill="#1C5D99"/>
+                  {/* Gold Ribbon Borders */}
+                  <path d="M30 60 V120 L40 105 L50 120 V60 Z" stroke="#D9B04D" strokeWidth="4"/>
+                  <path d="M50 60 V120 L60 105 L70 120 V60 Z" stroke="#D9B04D" strokeWidth="4"/>
+                  
+                  {/* Main Outer Seal */}
+                  <path d="M50 5 L57 12 L67 10 L71 19 L80 21 L81 31 L89 36 L86 45 L93 52 L86 59 L89 68 L81 73 L80 83 L71 85 L67 94 L57 92 L50 99 L43 92 L33 94 L29 85 L20 83 L19 73 L11 68 L14 59 L7 52 L14 45 L11 36 L19 31 L20 21 L29 19 L33 10 L43 12 Z" fill="#D9B04D"/>
+                  
+                  {/* Inner Rings */}
+                  <circle cx="50" cy="52" r="34" fill="#1A1838"/>
+                  <circle cx="50" cy="52" r="30" fill="#1C5D99"/>
+                  <circle cx="50" cy="52" r="25" fill="#2E7DCD"/>
+                  <circle cx="50" cy="52" r="21" stroke="#A7CFF5" strokeWidth="1.5" fill="none"/>
+                </svg>
               </div>
 
-              {/* Title Section */}
-              <div style={{ marginBottom: '2.5rem' }}>
-                <h1 style={{ color: '#FBBF24', fontFamily: 'sans-serif', fontSize: '2.5rem', letterSpacing: '4px', margin: 0, fontWeight: '900' }}>CERTIFICATE</h1>
-                <h2 style={{ fontSize: '1.25rem', fontFamily: 'sans-serif', margin: '0.25rem 0 0 0', letterSpacing: '2px', color: '#F3F4F6' }}>OF COMPLETION</h2>
-              </div>
-
-              {/* Presented To */}
-              <div style={{ marginBottom: '1.5rem' }}>
-                <p style={{ color: '#9CA3AF', marginBottom: '0.5rem', fontSize: '1rem' }}>This certificate is presented to</p>
-                <div style={{ 
-                  fontFamily: '"Georgia", "Times New Roman", serif', 
-                  fontStyle: 'italic', 
-                  fontSize: '3.5rem', 
-                  lineHeight: '1.2',
-                  color: '#FFFFFF',
-                  marginBottom: '1rem',
-                  display: 'inline-block'
-                }}>
-                  {c.studentName}
+              {/* Content Wrapper */}
+              <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', flex: 1 }}>
+                {/* Title Section */}
+                <div style={{ marginBottom: '2.5rem' }}>
+                  <h1 style={{ color: '#D9B04D', fontSize: '4rem', letterSpacing: '4px', margin: 0, fontWeight: '800', lineHeight: '1.2' }}>CERTIFICATE</h1>
+                  <h2 style={{ fontSize: '1.4rem', margin: '0', letterSpacing: '2px', color: '#FFFFFF', fontWeight: '600', textTransform: 'uppercase' }}>OF PROJECT</h2>
                 </div>
-              </div>
 
-              {/* Body Text */}
-              <div style={{ maxWidth: '85%', color: '#D1D5DB', fontSize: '1rem', lineHeight: '1.6', marginBottom: '3rem' }}>
-                This certificate acknowledges the active participation of {c.studentName} as a <strong>{c.internshipTitle}</strong> at <strong>{c.companyName}</strong>.
-                Your enthusiastic engagement highlights your strong dedication to acquiring knowledge and your important role in ensuring the achievement of the project's objectives.
-                <br/><br/>
-                Grade achieved: <strong style={{color: '#FBBF24'}}>{c.grade}</strong>
-                {c.remarks && <span> &nbsp;|&nbsp; Remarks: <em>"{c.remarks}"</em></span>}
-              </div>
-
-              {/* Footer Signatures */}
-              <div style={{ display: 'flex', gap: '5rem', marginTop: 'auto' }}>
-                <div style={{ borderTop: '2px solid rgba(255,255,255,0.3)', paddingTop: '0.5rem', minWidth: '150px' }}>
-                  <p style={{ margin: 0, fontWeight: 'bold', color: '#FBBF24', fontSize: '0.95rem' }}>{c.companyName}</p>
-                  <p style={{ margin: 0, color: '#9CA3AF', fontSize: '0.85rem' }}>Organization</p>
+                {/* Presented To */}
+                <div style={{ marginBottom: '2rem' }}>
+                  <p style={{ color: '#b2b1bf', margin: '0 0 0.5rem 0', fontSize: '1rem' }}>This certificate is presented to</p>
+                  <div style={{ 
+                    fontFamily: '"Great Vibes", cursive', 
+                    fontSize: '4.5rem', 
+                    lineHeight: '1.2',
+                    color: '#FFFFFF',
+                    margin: '0.5rem 0 1rem 0',
+                    display: 'inline-block'
+                  }}>
+                    {c.studentName}
+                  </div>
                 </div>
-                <div style={{ borderTop: '2px solid rgba(255,255,255,0.3)', paddingTop: '0.5rem', minWidth: '150px' }}>
-                  <p style={{ margin: 0, fontWeight: 'bold', color: '#FBBF24', fontSize: '0.95rem' }}>{new Date(c.issuedAt).toLocaleDateString()}</p>
-                  <p style={{ margin: 0, color: '#9CA3AF', fontSize: '0.85rem' }}>Date Issued</p>
+
+                {/* Body Text */}
+                <div style={{ maxWidth: '85%', color: '#b2b1bf', fontSize: '0.95rem', lineHeight: '1.8', marginBottom: '3rem' }}>
+                  This certificate acknowledges the active participation of<br/>
+                  [{c.studentName}] in the "[{c.internshipTitle}]" project held by {c.companyName}.<br/>
+                  Your enthusiastic engagement highlights your strong<br/>
+                  dedication to acquiring knowledge and your important<br/>
+                  role in ensuring the achievement of the project's objectives.
+                  {c.remarks && <><br/><br/>Additional Remarks: <em>"{c.remarks}"</em></>}
+                </div>
+
+                {/* Footer Signatures */}
+                <div style={{ display: 'flex', gap: '8rem', marginTop: 'auto', marginBottom: '1rem' }}>
+                  <div style={{ width: '180px' }}>
+                    <div style={{ borderBottom: '1px solid #b2b1bf', marginBottom: '0.5rem', height: '40px' }}></div>
+                    <p style={{ margin: 0, fontWeight: '700', color: '#D9B04D', fontSize: '0.95rem' }}>{c.companyName}</p>
+                    <p style={{ margin: 0, color: '#b2b1bf', fontSize: '0.85rem' }}>Head Of Event</p>
+                  </div>
+                  <div style={{ width: '180px' }}>
+                    <div style={{ borderBottom: '1px solid #b2b1bf', marginBottom: '0.5rem', height: '40px' }}></div>
+                    <p style={{ margin: 0, fontWeight: '700', color: '#D9B04D', fontSize: '0.95rem' }}>System Admin</p>
+                    <p style={{ margin: 0, color: '#b2b1bf', fontSize: '0.85rem' }}>Event Organizer</p>
+                  </div>
                 </div>
               </div>
             </div>
