@@ -71,6 +71,14 @@ export const DBProvider = ({ children }) => {
     await addDoc(collection(db, 'certificates'), { ...certificate, issuedAt: new Date().toISOString() });
   };
 
+  const updateCertificate = async (id, updates) => {
+    await updateDoc(doc(db, 'certificates', id), updates);
+  };
+
+  const deleteCertificate = async (id) => {
+    await deleteDoc(doc(db, 'certificates', id));
+  };
+
   const getCertificatesByStudent = (studentId) => certificates.filter(c => c.studentId === studentId);
   const getCertificatesByCompany = (companyId) => certificates;
 
@@ -100,6 +108,8 @@ export const DBProvider = ({ children }) => {
     getApplicationsByInternship,
     certificates,
     issueCertificate,
+    updateCertificate,
+    deleteCertificate,
     getCertificatesByStudent,
     getCertificatesByCompany,
     reports,

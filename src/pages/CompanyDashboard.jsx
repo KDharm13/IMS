@@ -151,6 +151,11 @@ const ReviewApplicants = () => {
                         <button className="btn btn-secondary" onClick={() => updateApplicationStatus(a.id, 'rejected')} style={{ color: 'red' }}>Reject</button>
                       </div>
                     )}
+                    {a.status === 'approved' && (
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button className="btn btn-secondary" onClick={() => updateApplicationStatus(a.id, 'rejected')} style={{ color: 'red' }}>Fire / Reject</button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -164,7 +169,7 @@ const ReviewApplicants = () => {
 
 const IssueCertificates = () => {
   const { user } = useAuth();
-  const { getInternshipsByCompany, getApplicationsByInternship, getCertificatesByCompany, issueCertificate } = useDB();
+  const { getInternshipsByCompany, getApplicationsByInternship, getCertificatesByCompany, issueCertificate, updateCertificate, deleteCertificate } = useDB();
   
   const internships = getInternshipsByCompany(user.id);
   const allApps = internships.flatMap(i => getApplicationsByInternship(i.id));
@@ -174,12 +179,12 @@ const IssueCertificates = () => {
   const [formData, setFormData] = useState({});
 
   const handleIssue = (app) => {
-    const data = formData[app.id] || { grade: 'A', remarks: 'Excellent performance', companyName: user.name };
+    const data = formData[app.id] || { grade: 'A', remarks: 'Excellent performance', companyName: 'RDB' };
     issueCertificate({
       studentId: app.studentId,
       studentName: app.studentName,
       companyId: user.id,
-      companyName: data.companyName || user.name,
+      companyName: data.companyName !== undefined ? data.companyName : 'RDB',
       internshipId: app.internshipId,
       internshipTitle: app.internshipTitle,
       grade: data.grade,
@@ -192,7 +197,7 @@ const IssueCertificates = () => {
     setFormData(prev => ({
       ...prev,
       [appId]: {
-        ...(prev[appId] || { grade: 'A', remarks: '', companyName: user.name }),
+        ...(prev[appId] || { grade: 'A', remarks: '', companyName: 'RDB' }),
         [field]: value
       }
     }));
@@ -230,7 +235,7 @@ const IssueCertificates = () => {
                       className="form-input" 
                       placeholder="Company" 
                       style={{ padding: '0.25rem', marginBottom: 0, width: '120px' }}
-                      value={formData[a.id]?.companyName !== undefined ? formData[a.id].companyName : user.name}
+                      value={formData[a.id]?.companyName !== undefined ? formData[a.id].companyName : 'RDB'}
                       onChange={(e) => handleFormChange(a.id, 'companyName', e.target.value)}
                     />
                   </td>
@@ -260,6 +265,51 @@ const IssueCertificates = () => {
                   </td>
                   <td>
                     <button className="btn btn-primary" onClick={() => handleIssue(a)}>Issue</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      <div className="card glass" style={{ marginTop: '2rem' }}>
+        <h2 style={{ marginBottom: '1rem', fontSize: '1.25rem' }}>Issued Certificates</h2>
+        {issuedCerts.length === 0 ? <p>No certificates issued yet.</p> : (
+          <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <th style={{ padding: '1rem' }}>Student Name</th>
+                <th>Internship Role</th>
+                <th>Grade</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {issuedCerts.map(cert => (
+                <tr key={cert.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ padding: '1rem' }}>{cert.studentName}</td>
+                  <td>{cert.internshipTitle}</td>
+                  <td>
+                    <select 
+                      className="form-input" 
+                      style={{ padding: '0.25rem', width: '80px', marginBottom: 0 }}
+                      value={cert.grade}
+                      onChange={(e) => updateCertificate(cert.id, { grade: e.target.value })}
+                    >
+                      <option value="O">O</option>
+                      <option value="A+">A+</option>
+                      <option value="A">A</option>
+                      <option value="B">B</option>
+                      <option value="C">C</option>
+                    </select>
+                  </td>
+                  <td>
+                    <button className="btn btn-secondary" style={{ color: 'red' }} onClick={() => {
+                      if (window.confirm("Are you sure you want to delete this certificate?")) {
+                        deleteCertificate(cert.id);
+                      }
+                    }}>Delete</button>
                   </td>
                 </tr>
               ))}
