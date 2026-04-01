@@ -271,12 +271,52 @@ const IssueCertificates = () => {
   );
 };
 
+const ReviewReports = () => {
+  const { user } = useAuth();
+  const { getReportsByCompany } = useDB();
+  const reports = getReportsByCompany(user.id);
+  
+  return (
+    <div>
+      <div className="page-header">
+        <h1 className="page-title">Student Reports</h1>
+        <p className="text-muted">Review progress reports submitted by your interns.</p>
+      </div>
+      <div className="card glass">
+        {reports.length === 0 ? <p>No reports submitted by interns yet.</p> : (
+          <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <th style={{ padding: '1rem' }}>Date</th>
+                <th>Student</th>
+                <th>Internship</th>
+                <th>Report Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reports.map(r => (
+                <tr key={r.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ padding: '1rem', whiteSpace: 'nowrap' }}>{new Date(r.submittedAt).toLocaleDateString()}</td>
+                  <td>{r.studentName}</td>
+                  <td>{r.internshipTitle}</td>
+                  <td><strong style={{ color: 'var(--primary)' }}>{r.title}</strong><br/><span style={{ fontSize: '0.85rem' }} className="text-muted">{r.description}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export default function CompanyDashboard() {
   return (
     <Routes>
       <Route path="dashboard" element={<DashboardHome />} />
       <Route path="postings" element={<ManagePostings />} />
       <Route path="applications" element={<ReviewApplicants />} />
+      <Route path="reports" element={<ReviewReports />} />
       <Route path="certificates" element={<IssueCertificates />} />
     </Routes>
   );

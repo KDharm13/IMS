@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { LogIn, KeyRound } from 'lucide-react';
+import { LogIn, KeyRound, User, Lock, Layout, ShieldCheck } from 'lucide-react';
 import emailjs from 'emailjs-com';
 
 export default function Login() {
@@ -75,80 +75,123 @@ export default function Login() {
   };
 
   return (
-    <div className="auth-container">
-      <div className="glass auth-card">
-        {step === 1 ? (
-          <>
-            <h2 className="auth-title">Welcome Back</h2>
-            {error && <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
-            <form onSubmit={handleCredentialsSubmit}>
-              <div className="form-group">
-                <label className="form-label">Email</label>
-                <input 
-                  type="email" 
-                  className="form-input" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required 
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Password</label>
-                <input 
-                  type="password" 
-                  className="form-input" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required 
-                />
-              </div>
-              <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
-                <LogIn size={20} /> Login
-              </button>
-            </form>
-            <p style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-              Don't have an account? <Link to="/register" style={{ color: 'var(--primary)' }}>Register</Link>
-            </p>
-            <div style={{ marginTop: '2rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              <p><strong>Demo Accounts:</strong></p>
-              <p>Admin: admin@system.com / admin123</p>
-              <p>(Or register newly as Student/Company)</p>
-            </div>
-          </>
-        ) : (
-          <>
-            <h2 className="auth-title">Verify Email</h2>
-            <p style={{ textAlign: 'center', marginBottom: '1rem' }}>
-              We've sent a 6-digit verification code to <strong>{email}</strong>.
-            </p>
-            {error && <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
-            <form onSubmit={handleOtpSubmit}>
-              <div className="form-group">
-                <label className="form-label">6-Digit Code</label>
-                <input 
-                  type="text" 
-                  maxLength={6}
-                  className="form-input" 
-                  style={{ textAlign: 'center', letterSpacing: '4px', fontSize: '1.2rem', fontWeight: 'bold' }}
-                  value={userOtp}
-                  onChange={(e) => setUserOtp(e.target.value)}
-                  required 
-                />
-              </div>
-              <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
-                <KeyRound size={20} /> Verify & Login
-              </button>
-              <button 
-                type="button" 
-                className="btn btn-secondary" 
-                style={{ width: '100%', marginTop: '1rem' }}
-                onClick={() => { setStep(1); setError(''); setUserOtp(''); }}
-              >
-                Back to Login
-              </button>
-            </form>
-          </>
-        )}
+    <div className="login-split-layout">
+      {/* Left Interface Layer */}
+      <div className="login-left">
+        <div className="login-logo">
+          <div className="login-logo-icon">
+            <Layout size={16} />
+          </div>
+          Template Design
+        </div>
+
+        <div className="login-form-wrapper">
+          <div className="login-avatar">
+            <User size={36} />
+          </div>
+
+          {step === 1 ? (
+            <>
+              {error && <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
+              <form onSubmit={handleCredentialsSubmit}>
+                <div className="login-input-wrapper">
+                  <User size={18} color="var(--text-muted)" />
+                  <input 
+                    type="email" 
+                    placeholder="USERNAME (EMAIL)"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required 
+                  />
+                </div>
+                <div className="login-input-wrapper">
+                  <Lock size={18} color="var(--text-muted)" />
+                  <input 
+                    type="password" 
+                    placeholder="PASSWORD"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required 
+                  />
+                </div>
+                
+                <button type="submit" className="login-btn">
+                  LOGIN
+                </button>
+
+                <div className="login-meta">
+                  <label><input type="checkbox" /> Remember me</label>
+                  <a href="#">Forgot your password?</a>
+                </div>
+
+                <div style={{ marginTop: '2rem', fontSize: '0.85rem', color: 'var(--text-muted)', textAlign: 'center', lineHeight: '1.5' }}>
+                  <p><strong>Demo Defaults:</strong></p>
+                  <p>Admin: admin@system.com / admin123</p>
+                </div>
+              </form>
+            </>
+          ) : (
+            <>
+              <h2 style={{ textAlign: 'center', fontFamily: '"Outfit", sans-serif', marginBottom: '0.5rem' }}>Verify Email</h2>
+              <p style={{ textAlign: 'center', marginBottom: '1.5rem', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                We've sent a 6-digit code to <br/><strong>{email}</strong>
+              </p>
+              {error && <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
+              <form onSubmit={handleOtpSubmit}>
+                <div className="login-input-wrapper" style={{ justifyContent: 'center' }}>
+                  <ShieldCheck size={18} color="var(--text-muted)" />
+                  <input 
+                    type="text" 
+                    maxLength={6}
+                    placeholder="000000"
+                    style={{ textAlign: 'center', letterSpacing: '8px', fontSize: '1.2rem', fontWeight: 'bold', paddingLeft: 0, width: '150px' }}
+                    value={userOtp}
+                    onChange={(e) => setUserOtp(e.target.value)}
+                    required 
+                  />
+                </div>
+                <button type="submit" className="login-btn" style={{ marginBottom: '1rem' }}>
+                  VERIFY
+                </button>
+                <button 
+                  type="button" 
+                  className="login-btn"
+                  style={{ background: 'transparent', color: 'var(--text-muted)', border: '1px solid var(--border)' }}
+                  onClick={() => { setStep(1); setError(''); setUserOtp(''); }}
+                >
+                  BACK TO LOGIN
+                </button>
+              </form>
+            </>
+          )}
+
+          <div style={{ marginTop: 'auto', paddingTop: '2rem', display: 'flex', justifyContent: 'center', gap: '0.25rem' }}>
+            <span style={{ height: '6px', width: '6px', backgroundColor: 'var(--text-muted)', borderRadius: '50%' }}></span>
+            <span style={{ height: '6px', width: '6px', backgroundColor: 'var(--text-muted)', borderRadius: '50%' }}></span>
+            <span style={{ height: '6px', width: '6px', backgroundColor: 'var(--text-muted)', borderRadius: '50%' }}></span>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Presentation Layer */}
+      <div className="login-right">
+        <div className="login-nav">
+          <Link className="login-nav-link" to="/">ABOUT</Link>
+          <Link className="login-nav-link" to="/">DOWNLOAD</Link>
+          <Link className="login-nav-link" to="/">PRICING</Link>
+          <Link className="login-nav-link" to="/">CONTACT</Link>
+          <Link to="/register" style={{ textDecoration: 'none' }}>
+            <button className="login-nav-btn">SIGN UP</button>
+          </Link>
+        </div>
+
+        <div className="welcome-text">
+          <h1>Welcome.</h1>
+          <p>Internship Management System portal. Join our robust network of opportunities or discover top talent.</p>
+          <div style={{ marginTop: '2rem', display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem' }}>
+            Not a member? <Link to="/register" style={{ color: 'white', fontWeight: 'bold' }}>Sign up now</Link>
+          </div>
+        </div>
       </div>
     </div>
   );

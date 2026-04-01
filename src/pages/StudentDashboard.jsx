@@ -130,26 +130,107 @@ const MyApplications = () => {
 };
 
 const SubmitReports = () => {
+  const { user } = useAuth();
+  const { getApplicationsByStudent, submitReport, getReportsByStudent } = useDB();
+  
+  const apps = getApplicationsByStudent(user.id).filter(a => a.status === 'approved');
+  const pastReports = getReportsByStudent(user.id);
+  
+  const [formData, setFormData] = useState({ title: '', description: '', internshipId: '' });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.internshipId) return alert('Please select an internship');
+    
+    const selectedApp = apps.find(a => a.internshipId === formData.internshipId);
+    
+    submitReport({
+      studentId: user.id,
+      studentName: user.name,
+      companyId: selectedApp.companyId,
+      internshipId: selectedApp.internshipId,
+      internshipTitle: selectedApp.internshipTitle,
+      title: formData.title,
+      description: formData.description
+    });
+    
+    alert('Report submitted successfully!');
+    setFormData({ title: '', description: '', internshipId: '' });
+  };
+
   return (
     <div>
       <div className="page-header">
         <h1 className="page-title">Submit Reports</h1>
         <p className="text-muted">Upload your weekly/monthly internship progress reports.</p>
       </div>
-      <div className="card glass" style={{ maxWidth: 600 }}>
-        <div className="form-group">
-          <label className="form-label">Report Title</label>
-          <input type="text" className="form-input" placeholder="e.g. Week 1 Progress" />
-        </div>
-        <div className="form-group">
-          <label className="form-label">Description / Summary</label>
-          <textarea className="form-input" rows="4" placeholder="Briefly describe what you worked on."></textarea>
-        </div>
-        <div className="form-group">
-          <label className="form-label">Attachment (PDF/Doc)</label>
-          <input type="file" className="form-input" />
-        </div>
-        <button className="btn btn-primary" onClick={() => alert('Report submitted!')}>Submit Report</button>
+      
+      <div className="card glass" style={{ maxWidth: 600, marginBottom: '2rem' }}>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label className="form-label">Select Internship</label>
+            <select 
+              className="form-input" 
+              value={formData.internshipId}
+              onChange={e => setFormData({...formData, internshipId: e.target.value})}
+              required
+            >
+              <option value="">-- Choose Internship --</option>
+              {apps.map(a => (
+                <option key={a.id} value={a.internshipId}>{a.internshipTitle}</option>
+              ))}
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Report Title</label>
+            <input 
+              type="text" 
+              className="form-input" 
+              placeholder="e.g. Week 1 Progress" 
+              value={formData.title}
+              onChange={e => setFormData({...formData, title: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Description / Summary</label>
+            <textarea 
+              className="form-input" 
+              rows="4" 
+              placeholder="Briefly describe what you worked on."
+              value={formData.description}
+              onChange={e => setFormData({...formData, description: e.target.value})}
+              required
+            ></textarea>
+          </div>
+          <button type="submit" className="btn btn-primary" disabled={apps.length === 0}>
+            Submit Report
+          </button>
+        </form>
+      </div>
+
+      <h2 style={{ marginBottom: '1rem', marginTop: '2rem' }}>Past Reports</h2>
+      <div className="card glass">
+        {pastReports.length === 0 ? <p>No reports submitted yet.</p> : (
+          <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                <th style={{ padding: '1rem' }}>Date</th>
+                <th>Internship</th>
+                <th>Title</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pastReports.map(r => (
+                <tr key={r.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ padding: '1rem' }}>{new Date(r.submittedAt).toLocaleDateString()}</td>
+                  <td>{r.internshipTitle}</td>
+                  <td><strong style={{ color: 'var(--primary)' }}>{r.title}</strong><br/><span style={{ fontSize: '0.85rem' }} className="text-muted">{r.description}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );

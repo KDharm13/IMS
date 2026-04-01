@@ -21,7 +21,8 @@ export default function Layout() {
       { path: '/company/dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { path: '/company/postings', label: 'Manage Postings', icon: Briefcase },
       { path: '/company/applications', label: 'Review Applicants', icon: Users },
-      { path: '/company/certificates', label: 'Certificates', icon: FileText },
+      { path: '/company/reports', label: 'Student Reports', icon: FileText },
+      { path: '/company/certificates', label: 'Certificates', icon: Award },
     ];
     if (user.role === 'admin') return [
       { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
